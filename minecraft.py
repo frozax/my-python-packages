@@ -55,5 +55,18 @@ class MinecraftServer():
         return self.is_stone_button_state(p, 13)
 
     # set a range of blocks
-    def set_blocks(self, p1, p2, type_, cond_type=None):
-        pass
+    # replace blocks with old_type, old_data by blocks with new_type, new_data
+    # in the selected region
+    def replace(self, p1, p2, new_type, new_data, old_type="", old_data=None):
+        if not new_type.startswith("minecraft:"):
+            new_type = "minecraft:" + new_type
+        if old_type != "" and not old_type.startswith("minecraft:"):
+            old_type = "minecraft:" + old_type
+        self._command("fill %d %d %d %d %d %d %s %d replace %s %s" %
+                      (p1[0], p1[1], p1[2], p2[0], p2[1], p2[2],
+                       new_type, new_data, old_type,
+                       "" if old_data is None else int(old_data)))
+
+    def particle(self, part_type, p1, p2, speed, count):
+        self._command("particle %s %d %d %d %d %d %d %f %d" %
+                      (part_type, p1[0], p1[1], p1[2], p2[0], p2[1], p2[2], speed, count))
